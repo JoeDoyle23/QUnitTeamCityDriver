@@ -30,40 +30,52 @@ if (navigator.userAgent.indexOf("PhantomJS") !== -1) {
     };
     
     /* TODO (dw): Have this passed through as a param to PhantonJS.exe? */
-    var suiteName = "QUnit Tests";
-    var currentTestName = "";
-    var hasBegun = false;
+    var suiteName = "QUnit Tests".teamCityEscape();
+    var currentModule = "";
+	var currentTestName = "";
 
-    qunitBegin = function () {
-        // TODO (dw): Should be able to use QUnit.begin() - but that doesn't seem to fire.
-        console.log("##teamcity[testSuiteStarted name='{0}']".format(suiteName.teamCityEscape()));
+    /* QUnit.moduleStart() */
+	QUnit.begin = function () {
+        console.log("##teamcity[testSuiteStarted name='{0}']".format(suiteName));
     };
+
+    /* QUnit.moduleStart({ name }) */
+	QUnit.moduleStart = function(args) {
+        currentModule = args.name.teamCityEscape();
+        console.log("##teamcity[testSuiteStarted name='{0}']".format(currentModule));
+	};
+
+	/* QUnit.moduleDone({ name }) */
+	QUnit.moduleDone = function(args) {
+        currentModule = args.name.teamCityEscape();
+        console.log("##teamcity[testSuiteFinished name='{0}']".format(currentModule));
+	};
 
     /* QUnit.testStart({ name }) */
     QUnit.testStart = function (args) {
-        if (!hasBegun) {
-            qunitBegin();
-            hasBegun = true;
-        }
-
-        currentTestName = args.name;
-    };
-
-    /* QUnit.log({ result, actual, expected, message }) */
-    QUnit.log = function (args) {
-        var currentAssertion = "{0} > {1}".format(currentTestName, args.message).teamCityEscape();
+        currentTestName = args.name.teamCityEscape();
+        var currentAssertion = "{0} - {1}".format(currentModule, currentTestName);
 
         console.log("##teamcity[testStarted name='{0}']".format(currentAssertion));
+    };
 
-        if (!args.result) {
-            console.log("##teamcity[testFailed type='comparisonFailure' name='{0}' details='expected={1}, actual={2}' expected='{1}' actual='{2}']".format(currentAssertion, args.expected.teamCityEscape(), args.actual.teamCityEscape()));
-        }
-
+    /* QUnit.testDone({ name }) */
+    QUnit.testDone = function (args) {
+		currentTestName = args.name.teamCityEscape();
+        var currentAssertion = "{0} - {1}".format(currentModule, currentTestName);
+	
         console.log("##teamcity[testFinished name='{0}']".format(currentAssertion));
+    };
+	
+    /* QUnit.log({ result, actual, expected, message }) */
+    QUnit.log = function (args) {
+        if (!args.result) {
+            console.log("##teamcity[testFailed type='comparisonFailure' name='{0}' details='{3} - expected={1}, actual={2}' expected='{1}' actual='{2}']".format(currentTestName, args.expected.teamCityEscape(), args.actual.teamCityEscape(), args.message.teamCityEscape()));
+        }
     };
 
     /* QUnit.done({ failed, passed, total, runtime }) */
     QUnit.done = function (args) {
-        console.log("##teamcity[testSuiteFinished name='{0}']".format(suiteName.teamCityEscape()));
+        console.log("##teamcity[testSuiteFinished name='{0}']".format(suiteName));
     };
 }

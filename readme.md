@@ -24,7 +24,7 @@ Adding QUnitTeamCityDriver to your project
 
 Configuring your TeamCity Build
 -------------------------------
-As both .js files are part of your solution, they should both arrive on  your build server when the latest sources are fetched.
+As both .js files are part of your solution, they should both arrive on your build server when the latest sources are fetched.
 
  1. Download [PhantomJS](http://code.google.com/p/phantomjs/downloads/list) (Static) and copy it out to your build server, to a known location, for example: `C:\PhantomJS.`
  2. Add a "Command Line" Build Step to your build in TeamCity which executes Tests.htm via PhantomJS  
@@ -32,6 +32,14 @@ As both .js files are part of your solution, they should both arrive on  your bu
     **Command parameters:** `\Scripts\QUnitTeamCityDriver.phantom.js Tests.htm`
  3. When run in the context of PhantomJS QUnitTeamCityDriver.js subscribes the QUnit's callback functions and outputs the results to TeamCity.
 
+Updates
+-------
+ - Switched over to QUnit.begin since it appears to be firing correctly in newer versions of QUnit
+ - Added Module name to Test name displayed in TeamCity
+ - Individual assertions no longer count as individual tests. They are shown if they fail. 
+
 Notes
 -----
- * Tested against phantomjs-1.2.0-win32-static.zip (June 26 2011)
+ May 21 2012 - Tested against : 
+    phantomjs-1.5.0-win32-static.zip 
+    TeamCity 6.5, 7.0.2, 7.0.3

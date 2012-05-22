@@ -36,7 +36,7 @@
     <Folder Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Example\jquery-1.6.2.js" />
+    <Content Include="Example\jquery-1.7.1.min.js" />
     <Content Include="Example\qunit.css" />
     <Content Include="Example\qunit.js" />
     <Content Include="QUnitTeamCityDriver.phantom.js" />
