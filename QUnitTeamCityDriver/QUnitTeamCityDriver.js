@@ -1,4 +1,7 @@
+
+
 if (navigator.userAgent.indexOf("PhantomJS") !== -1) {
+    
     String.prototype.format = function () {
         var args = arguments;
         return this.replace(/{(\d+)}/g, function (match, number) {
@@ -28,7 +31,7 @@ if (navigator.userAgent.indexOf("PhantomJS") !== -1) {
             }
         });
     };
-    
+
     /* TODO (dw): Have this passed through as a param to PhantonJS.exe? */
     var suiteName = "QUnit Tests".teamCityEscape();
     var currentModule = "";
@@ -70,7 +73,9 @@ if (navigator.userAgent.indexOf("PhantomJS") !== -1) {
     /* QUnit.log({ result, actual, expected, message }) */
     QUnit.log = function (args) {
         if (!args.result) {
-            console.log("##teamcity[testFailed type='comparisonFailure' name='{0}' details='{3} - expected={1}, actual={2}' expected='{1}' actual='{2}']".format(currentTestName, args.expected.teamCityEscape(), args.actual.teamCityEscape(), args.message.teamCityEscape()));
+            var expected = args.expected ? args.expected.toString().teamCityEscape() : 'true';
+            var actual = args.expected ? args.expected.toString().teamCityEscape() : 'false';
+            console.log("##teamcity[testFailed type='comparisonFailure' name='{0}' details='{3} - expected={1}, actual={2}' expected='{1}' actual='{2}']".format(currentTestName, expected, actual, args.message.teamCityEscape()));
         }
     };
 
