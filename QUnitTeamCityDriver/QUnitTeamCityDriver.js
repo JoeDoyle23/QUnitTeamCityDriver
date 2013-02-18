@@ -74,7 +74,7 @@ if (navigator.userAgent.indexOf("PhantomJS") !== -1) {
     QUnit.log = function (args) {
         if (!args.result) {
             var expected = args.expected ? args.expected.toString().teamCityEscape() : 'true';
-            var actual = args.expected ? args.expected.toString().teamCityEscape() : 'false';
+            var actual = args.actual ? args.actual.toString().teamCityEscape() : 'false';
             console.log("##teamcity[testFailed type='comparisonFailure' name='{0}' details='{3} - expected={1}, actual={2}' expected='{1}' actual='{2}']".format(currentTestName, expected, actual, args.message.teamCityEscape()));
         }
     };
